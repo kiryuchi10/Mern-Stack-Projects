@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// LoginForm.js
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../styles/LoginForm.css";
 
-const LoginForm = () => {
+const LoginForm = ({ setAuthenticated }) => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -12,14 +14,15 @@ const LoginForm = () => {
         try {
             const response = await axios.post('http://localhost:5000/api/auth/login', formData);
             localStorage.setItem('token', response.data.token);
-            navigate('/welcome'); // Redirect to welcome page
+            setAuthenticated(true); // Set authentication state
+            navigate('/dashboard'); // Redirect to Dashboard
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
         }
     };
 
     return (
-        <div>
+        <div className="login-container">
             <h2>Login</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
